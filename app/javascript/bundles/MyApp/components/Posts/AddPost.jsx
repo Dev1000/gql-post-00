@@ -20,6 +20,7 @@ const AddPost = (props) => {
     setTitle("");
     setBody("");
     props.updateShow();
+    // just test
   }
 
 
