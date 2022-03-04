@@ -7,7 +7,7 @@ module Types
     include GraphQL::Types::Relay::HasNodesField
 
     field :fetch_posts, resolver: Queries::FetchPosts, description: 'All posts'
-    field :fetch_post, resolver: Queries::FetchPost, 
-                       description: 'Fetch 1 post by id'
+    field :fetch_post, resolver: Queries::FetchPost, description: 'Get 1 post by id'
+    field :search_post, resolver: Queries::SearchPost, description: 'By Title'
   end
 end

@@ -1,50 +1,50 @@
-import React, {useEffect, useState} from "react";
-import gql from 'graphql-tag';
-import {useQuery} from "@apollo/client";
-import {withProvider} from "./Utils/graphqlProvider";
-import Post from "./Posts/Post";
+import React, { useEffect, useState } from "react";
+import { useQuery, useLazyQuery } from "@apollo/client";
+import { withProvider } from "./Utils/graphqlProvider";
 
-const postsQuery = gql`
-  query allPosts {
-    fetchPosts {
-      id
-      title
-      body
-    }
-  }
-`
-/*const postQuery = gql`
-  query{
-    fetchPost(id: 1){
-      id
-      title
-    }
-  }
-`*/
+import Post from "./Posts/Post";
+import AddPost from "./Posts/AddPost";
+import {GET_ALL_POST} from "./Utils/GqlQueries";
+
 const Posts = () => {
   const [posts, setPosts] = useState([]);
-  const {data, loading, error} = useQuery(postsQuery);
-
-  useEffect(() => {
-    if(!loading && data){
-      console.log('data:', data);
+  const [showAdd, setShowAdd] = useState(false);
+  const {data, loading, error} = useQuery(GET_ALL_POST, {
+    onCompleted(data){
       setPosts(data.fetchPosts);
     }
-  }, [loading, data]);
+  });
 
-  if(loading){
-    return <span>"Loading..."</span>
+  if (loading) return <span>"Loading..."</span>
+  if (error) return <p>Error :( {error.message}</p>
+
+  const updateShow = () => {
+    setShowAdd(prevState => !prevState)
   }
+
+  const updatePosts = post => {
+    console.log('post:', post);
+    setPosts([post, ...posts])
+  };
 
   return (
     <div>
       <h1>Posts</h1>
       <ul>
         {posts.map(post => <Post key={post.id} {...post} />)}
-        {/*<Post {...data.fetchPost} />*/}
       </ul>
+      <p>
+        <button onClick={updateShow}>Add Post</button>
+      </p>
+      {
+        showAdd &&
+          <AddPost
+            updatePosts={updatePosts}
+            updateShow={updateShow}
+          />
+      }
     </div>
   )
 }
 
-export default withProvider(Posts)
+export default withProvider(Posts);
