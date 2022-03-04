@@ -6,10 +6,8 @@ module Types
     include GraphQL::Types::Relay::HasNodeField
     include GraphQL::Types::Relay::HasNodesField
 
-    field :posts, [Types::PostType], null: false, description: 'All posts'
-
-    def posts
-      Post.all
-    end
+    field :fetch_posts, resolver: Queries::FetchPosts, description: 'All posts'
+    field :fetch_post, resolver: Queries::FetchPost, 
+                       description: 'Fetch 1 post by id'
   end
 end
